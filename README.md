@@ -10,6 +10,15 @@ This a **SCADA Django web application** for automation processes.
 3. Contact information
 
 
+###1. Project description
+
+This my Bachelor Thesis project for the University of Zaragoza. The goal was to build a SCADA that would:
+  1. Provide control operations over any brand of PLC
+  2. Remote access to the control platform
+
+These requirements were met by developing a **Python web application**, with **Django** and **Bootstrap** as frameworks, that is allocated in a **Apache** server with **WSGI** technology and that is capable of meeting **SCADA** standards through **OPC** communicaiton.
+
+
 name of the projects and all sub-modules and libraries (sometimes they are named different and very confusing to new users)
 descriptions of all the project, and all sub-modules and libraries
 a file manifest
