@@ -54,7 +54,7 @@ python manage.py runserver
 
 ```
 
-Then just enter on [127.0.0.1/home] on your web browser to give it a try. 
+Then just type 127.0.0.1/home on your web browser to give it a try. 
 Type **'ricardo'** as **username** and **password** to enter. You can later modify this on the admin panel.
 
 
