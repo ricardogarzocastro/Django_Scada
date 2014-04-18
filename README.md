@@ -58,22 +58,10 @@ Then just type 127.0.0.1/home on your web browser to give it a try.
 Type **'ricardo'** as **username** and **password** to enter. You can later modify this on the admin panel.
 
 
+###3. Contact information
+
+I am Ricardo Garzo Castro, Electronics Engineer. You can email me about any issue regarding this project at **ricardogarzocastro@gmail.com** and I will be happy to respond to any feedback!
 
 
 
-
-
-
-
-
-
-5-line code snippet on how its used (if it's a library)
-configuration instructions
-instructions to install, configure, and to run the programs
-
-copyright and licensing information (or "Read LICENSE")
-
-list of authors or "Read AUTHORS"
-instructions to submit bugs, feature requests, submit patches, join mailing list, get announcements, or join the user or dev community in other forms
-other contact info (email address, website, company name, address, etc)
 
