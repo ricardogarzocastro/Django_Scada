@@ -6,8 +6,9 @@ This a **SCADA Django web application** for automation processes.
 ##Table of contents:
 
 1. Project description
-2. Installation and usage
-3. Contact information
+2. File directory description
+3. Installation and usage
+4. Contact information
 
 
 ###1. Project description
@@ -18,12 +19,17 @@ This my Bachelor Thesis project for the University of Zaragoza. The goal was to 
 
 These requirements were met by developing a **Python web application**, with **Django** and **Bootstrap** as frameworks, that is allocated in a **Apache** server with **WSGI** technology and that is capable of meeting **SCADA** standards through **OPC** communicaiton.
 
-###2. Installation and usage
+###2. File directory description
 
 The file directory description is as follows: 
   1. **http.conf**: This is the Apache configuration file. Feel free to use it as reference.
   2. **django_scada**: This folder contains the Python files, static files and databases for the Django Scada application.
-    3. this is a test 
+    3. apache: Static files folder
+    4. celerybeat-schedule: config file for the Celerby Beat Cron Manager
+    5. django_admin_bootstrapped: Administration panel for this Django application comes with bootstrap theme.
+    6. django_scada: Folder with the necessary files for a Django project
+    7. variables: Django application folder for the SCADA
+
 
 
 
