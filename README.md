@@ -30,6 +30,35 @@ The file directory description is as follows:
     6. django_scada: Folder with the necessary files for a Django project
     7. variables: Django application folder for the SCADA
 
+###3. Installation and usage.
+
+Necessary programs for running all the features on this app are: 
+
+1. Python 2.7
+2. Pywin32: If you are using it under a Windows machine
+3. OpenOPC: OPC client used by this app.
+4. Apache 2.2
+5. RabbitMQ: For the scheduled tasks
+6. 
+
+Necessary Python packages:
+1. Django
+2. django-celery
+3. pyro
+4. 
+
+Once all the programs are installed, for a development version or to give it a try just go the the terminal and type:
+
+```
+
+cd source/django_scada
+python manage.py runserver
+
+```
+
+Then just enter to 127.0.0.1/home to give it a try. 
+Type **'ricardo'** as **username** and **password** to enter. You can later modify this on the admin panel.
+
 
 
 
