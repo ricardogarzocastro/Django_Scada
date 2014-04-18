@@ -6,7 +6,7 @@ This a **SCADA Django web application** for automation processes.
 ##Table of contents:
 
 1. Project description
-2. Installation and running
+2. Installation and usage
 3. Contact information
 
 
@@ -18,10 +18,20 @@ This my Bachelor Thesis project for the University of Zaragoza. The goal was to 
 
 These requirements were met by developing a **Python web application**, with **Django** and **Bootstrap** as frameworks, that is allocated in a **Apache** server with **WSGI** technology and that is capable of meeting **SCADA** standards through **OPC** communicaiton.
 
+###2. Installation and usage
 
-name of the projects and all sub-modules and libraries (sometimes they are named different and very confusing to new users)
-descriptions of all the project, and all sub-modules and libraries
-a file manifest
+The file directory description is as follows: 
+  1. **http.conf**: This is the Apache configuration file. Feel free to use it as reference.
+  2. **django_scada**: This folder contains the Python files, static files and databases for the Django Scada application.
+    3. this is a test 
+
+
+
+
+
+
+
+
 
 
 5-line code snippet on how its used (if it's a library)
