@@ -1,0 +1,137 @@
+{% load admin_static bootstrapped_goodies_tags %}{% load url from future %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{% endblock %}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+{% block extrastyle %}{% endblock %}
+
+<!-- Le styles, placed after extrastyle to correctly override default styling -->
+<link href="{% static "bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+<link href="{% static "bootstrap/css/bootstrap-responsive.min.css" %}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static "admin/css/overrides.css" %}" />
+
+<!-- <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}" /> -->
+<script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+
+{% block extrahead %}{% endblock %}
+
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+<script type="text/javascript">
+(function($) {
+    $(document).ready(function() {
+        $('input[type="submit"]').addClass('btn');
+    });
+}(jQuery));
+</script>
+</head>
+{% load i18n %}
+
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
+
+<!-- Container -->
+<div class="container-fluid">
+
+    {% if not is_popup %}
+    
+
+
+    <!-- Header -->
+   
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/home">Online SCADA</a>
+          <div class="nav-collapse collapse">
+            
+
+            <div class="navbar-text pull-right">
+             
+
+              <div class="btn-group">
+                <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown"><i class="icon-user icon-white"></i>  {{ user.username }}<span class="caret"></span></button>
+                <ul class="dropdown-menu pull-right">
+                  <li><a href="/admin/"><i class="icon-th-list"></i> Settings</a></li>
+                  <li><a href="/admin/password_change/">Change password</a></li>
+                  <li class="divider"></li>
+                  <li><a href="{% url "django.contrib.auth.views.logout" %}"><i class="icon-off"></i>  Sign Out</a></li>
+                </ul>
+              </div><!-- /btn-group -->
+
+            </div>
+
+<!-- /admin/auth/user/
+ -->
+
+
+            <ul class="nav">
+              <li id="home"><a href="/home"><i class="icon-home icon-white"></i> Home</a></li>
+              <li id="about"><a href="#about"><i class="icon-info-sign icon-white"></i> About</a></li>
+              <li id="contact"><a href="#contact"><i class="icon-envelope icon-white"></i> Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <!-- END Header -->
+
+
+
+
+    <div class="row-fluid">
+        <div class="span12">
+            {% block breadcrumbs %}
+            {% endblock %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Content -->
+    <div id="content" class="{% block coltype %}colM{% endblock %}">
+        {% block navbar %}
+        <div class="row-fluid">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    {% block pretitle %}{% endblock %}
+                    {% block content_title %}{% if title %}<a class="brand">{% render_with_template_if_exist title|lower|add:"/admin_app_name.html" title %}</a>{% endif %}{% endblock %}
+                    {% block object-tools %}{% endblock %}
+                </div>
+            </div>
+        </div>
+        {% endblock navbar %}
+
+        {% block messages %}
+            {% if messages %}
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="alert alert-info">
+                            <ul class="unstyled">
+                                {% for message in messages %}
+                                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endblock messages %}
+
+        {% block content %}{{ content }}{% endblock %}
+        {% block sidebar %}{% endblock %}
+    </div>
+    <!-- END Content -->
+
+    {% block footer %}<footer id="footer"></footer>{% endblock %}
+</div>
+<!-- END Container -->
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+
+ <!-- ===================================================
+ *Javascrit and JQuery part of the read template
+
+
+
+ Functions for updating values and timing the operations
+
+ * ==========================================================  -->
+
+
+<script type="text/javascript">
+
+  var intervals={};
+  var update_seconds={};
+
+
+function get_variable(){ 
+  //Activa el spinner para indicar al usuario que se esta ejecutando la función
+  $('#date').empty();
+  $('#date').append(spinner.el);
+  //Función para comunicación asíncrona a la url "/json/read_update" para refrescar lectura
+  $.getJSON("/json/read_update/", function(json_data) {
+    //El dato "json_data" contiene los nuevos valores de las variables devueltos por el servidor
+    var n = $("tr").length;
+    for (var i=0; i<n-1; i++){
+      //Mediante selectorse jQuery se modifica el aspecto de las tablas si ha habido algún error.
+      if (json_data.variables[i].quality=='Error'){
+        $("#variable"+i).removeClass();
+        $("#variable"+i).toggleClass('error');
+      }
+      //Mediante selectorse jQuery se elimina el antiguo valor de la tabla HTML y se añade el nuevo.
+      $("#variable"+ i + " td#server").empty();
+      $("#variable"+ i + " td#server").append(json_data.variables[i].server);
+      
+      $("#variable"+ i + " td#name").empty();
+      $("#variable"+ i + " td#name").append(json_data.variables[i].name);
+      if (json_data.variables[i].quality=='Error'){
+        $("#variable"+ i + " td#value").empty();
+        $("#variable"+ i + " td#value").append('<i class="icon-exclamation-sign"></i>');
+      }
+      else{
+        $("#variable"+ i + " td#value").empty();
+        $("#variable"+ i + " td#value").append(json_data.variables[i].value);
+      }
+
+    }
+    //Pongo fecha de la ultima actualización
+    var myDate = new Date();
+    var seconds=myDate.getSeconds();
+    var minutes=myDate.getMinutes();
+    var hours=myDate.getHours();
+
+    if (seconds<10) {seconds=('0'+seconds);}
+    if (minutes<10) {minutes=('0'+minutes);}
+    if (hours<10) {hours=('0'+hours);}
+
+    var displayDate =  hours + ':' + minutes +  ':' + seconds + ' ' + (myDate.getDate()) + '/' +  ( '0' + (myDate.getMonth()+1) ).slice( -2 ) + '/' + myDate.getFullYear();  
+    $('#date').empty();
+    $('#date').append('<p>Last Update: <strong>' +  displayDate + '</strong></p>');
+  });
+};
+
+function setautoupdate(cbox){
+  clearInterval(intervals);
+  $("#update_seconds").each(function(index, domele) {
+    update_seconds = domele.value;
+    update_seconds=update_seconds*1000;
+  });
+  if(cbox && update_seconds>0)
+    {intervals=setInterval(function(){get_variable()},update_seconds);}      
+};
+
+</script>
+
+ <!-- ===================================================
+ * HTML Part of the read template.
+ It displays a row of buttons and a table to display the 
+ variables status.
+
+
+
+
+
+
+ * ==========================================================  -->
+<div  class="span10"><!-- USO SPAN 10 PARA DAR 10 ANCHURA LO QUE HAY A LA DERECHA DE LA TABLA LATERAL -->
+  {% if variable_list %}
+
+        <div class="row-fluid">  <!-- row fluid 3-->
+          <div class="span12" ><!-- span 12 3-->
+            
+            <div class="row-fluid">  <!-- row fluid 4-->
+                <div id="date" class="span12"><p>Last Update: <strong>None </strong></p></div>
+            </div>  <!-- row fluid 4-->
+            
+            <div class="input-append">
+              <input class="span2" id="update_seconds" type="text" placeholder="Seconds...">
+              <div class="btn-group">
+                <button class="btn btn-primary" onclick="get_variable()"><i class="icon-repeat icon-white"></i> Update</button>
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                  <li><a onclick="get_variable()" onmouseover="" style="cursor: pointer;"><i class="icon-repeat"></i> Update</a></li>
+                  
+                  <li><a onclick="setautoupdate(true)"  onmouseover="" style="cursor: pointer;"><i class="icon-refresh"></i> Auto-Update</a></li>
+                  <li class="divider"></li>
+                  
+                  <li><a onclick="setautoupdate(false)" onmouseover="" style="cursor: pointer;"><i class="icon-stop"></i> Stop</a></li>
+                </ul>
+              </div><!-- /btn-group -->
+              <div class="btn-group">
+                <a href="/display_editor" role="button" class="btn btn-primary" >Launch display editor</a>
+              </div><!-- /btn-group -->
+            </div><!-- input append-->
+          
+          </div><!-- span 12 3-->
+        </div>  <!-- row fluid 3-->
+
+
+        <div class="row-fluid">  <!-- row fluid 2-->
+          <div class="span12"><!-- span 12 2-->
+            <!-- div class="span12" id="tabla"-->
+            <table  id="tabla" class="span12"><!-- USO SPAN12 PARA DAR 12 ANCHURA A LA -->
+            <table  class="table table-striped table-bordered table-condensed">
+              <thead>
+                <tr>
+                  <th style="width: 25%">Server</th>
+                  <th style="width: 30%">Name</th>
+                  <th style="width: 45%">Value</th>
+                </tr>
+              </thead>
+              <tbody >
+                  {% for variable in variable_list %}
+
+                    {% if variable.display  %}
+
+                      {% if variable.quality = "Error" %}
+                        <tr class="error" id = "variable{{forloop.counter0}}">
+                      {% else %}
+                        <tr id = "variable{{forloop.counter0}}">
+
+                      {% endif %}
+                          <td id="server">{{ variable.server }}</td>
+                          <td id="name">{{ variable.name }}</td>
+
+                          {% if variable.quality = "Error" %}
+                            <td id="value"><i class="icon-exclamation-sign"></i></td>
+                          {% else %}
+                            <td id="value">{{ variable.value }}</td>
+                          {% endif %}
+
+
+
+                        </tr>
+                    {% endif %}
+
+                  {% endfor %}
+
+              </tbody>
+            </table><!-- class table striped -->
+          </table><!-- table SPAN12 -->
+        </div><!-- div id tabla -->
+
+      
+      </div>  <!-- row fluid 2-->
+
+
+
+      <!-- FIN LECTURA DE VARIABLES -->
+
+
+                  {% else %}
+                  <p>No variables are available.</p>
+                  <p><a href="/admin/variables/">Add one.</p>
+                {% endif %}
+</div><!--/.span 10-->
+

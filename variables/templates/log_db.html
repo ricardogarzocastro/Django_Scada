@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Log from Data Base</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+
+     table { table-layout: fixed; }
+     table th, table td { overflow: hidden; } 
+
+    </style>
+    <link href="{{ STATIC_URL }}css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="http://twitter.github.com/bootstrap/assets/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="http://twitter.github.com/bootstrap/assets/ico/apple-touch-icon-57-precomposed.png">
+
+
+    <!-- JAVASCRIPT -->
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+
+
+    <!-- BOOTSTRAP -->
+
+    <script src="{{ STATIC_URL }}js/jquery.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-transition.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-scrollspy.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-tab.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-button.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-collapse.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-carousel.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-typeahead.js"></script>
+
+
+
+
+    <!-- SPIN -->
+    <script src="{{ STATIC_URL }}js/spin.js"></script>
+
+
+    <!-- JQPLOT -->
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jqplot/jquery.jqplot.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}js/jqplot/jquery.jqplot.css" />
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jqplot/plugins/jqplot.canvasTextRenderer.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+    <script type="text/javascript" language="javascript" src="{{ STATIC_URL }}js/jqplot/plugins/jqplot.dateAxisRenderer.js"></script>
+    <script type="text/javascript" language="javascript" src="{{ STATIC_URL }}js/jqplot/plugins/jqplot.cursor.min.js"></script>
+    <script type="text/javascript" language="javascript" src="{{ STATIC_URL }}js/jqplot/plugins/jqplot.highlighter.min.js"></script>
+
+
+
+    <script>
+    //Activo la casilla Graph from DataBase en la barra lateral
+    $(document).ready(function() {
+      $("#log_db" ).attr('class', 'active');
+
+    });
+
+      //Opciones del spinner
+      var opts = {
+        lines: 13, // The number of lines to draw
+        length: 7, // The length of each line
+        width: 4, // The line thickness
+        radius: 5, // The radius of the inner circle
+        corners: 1, // Corner roundness (0..1)
+        rotate: 0, // The rotation offset
+        color: '#000', // #rgb or #rrggbb
+        speed: 1, // Rounds per second
+        trail: 60, // Afterglow percentage
+        shadow: false, // Whether to render a shadow
+        hwaccel: false, // Whether to use hardware acceleration
+        className: 'spinner', // The CSS class to assign to the spinner
+        zIndex: 2e9, // The z-index (defaults to 2000000000)
+        top: 'auto', // Top position relative to parent in px
+        left: 'auto' // Left position relative to parent in px
+      };
+    var spinner = new Spinner(opts).spin();
+
+    </script>
+
+  </head>
+
+  <body >
+        
+    <!-- CABECERA -->
+    {% include "header.html" %}
+
+    <div class="container-fluid">
+      <div class="row-fluid">  
+ 
+
+            <!-- BARRA DE NAVEGACION LATERAL -->
+            {% include "side_bar.html" %}
+            
+            <!-- HTML DE graph_db_include -->
+            {% include "log_db_include.html" %}
+
+
+    
+      </div><!--/row.fluid1-->
+
+    </div><!--/.fluid-container-->
+
+  </body></html>

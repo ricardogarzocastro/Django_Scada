@@ -1,0 +1,123 @@
+<script type="text/javascript">
+var intervals={};
+var update_seconds={};
+
+function process_value(){
+  $('#date').empty();
+  $('#date').append(spinner.el);
+  var n = $("tr").length;
+  //Mediante selecotrse jQuery se crea un objeto JavaScript con la información de las variables a escribir
+  response = {"data" : []}
+  for (var i=0; i<n-1; i++){
+    var obj={};
+      $("#variable"+ i + " td#server").each(function(index, domele) {
+         obj['server'] = $(this).text();
+      });
+      $("#variable"+ i + " td#name").each(function(index, domele) {
+        obj['name'] = $(this).text();
+      });      
+      $("#variable"+ i + " input:text").each(function(index, domele) {
+        obj['value'] = domele.value;
+      });
+     response.data.push(obj);
+  }
+  //Codificación de la variable JavaScript en formato json.
+  json_response = JSON.stringify(response);
+  //Función $.post de jQuery para envío y respuesta de datos al servidor 
+  $.post("/json/control_response/", json_response).success(function(dta) {   
+    for (var i=0; i<n-1; i++){
+      //"dta" retorna success o error, para cada operación. Informamos al usuario con un cambio en el color de la tabla
+      $("#variable"+i).removeClass();
+      $("#variable"+i).toggleClass(dta[i]);
+    }
+      //Pongo fecha de la ultima actualización
+      var myDate = new Date();
+      var seconds=myDate.getSeconds();
+      var minutes=myDate.getMinutes();
+      var hours=myDate.getHours();
+
+      if (seconds<10) {seconds=('0'+seconds);}
+      if (minutes<10) {minutes=('0'+minutes);}
+      if (hours<10) {hours=('0'+hours);}
+
+      var displayDate =  hours + ':' + minutes +  ':' + seconds + ' ' + (myDate.getDate()) + '/' +  ( '0' + (myDate.getMonth()+1) ).slice( -2 ) + '/' + myDate.getFullYear();      
+      $('#date').empty();
+      $('#date').append('<p>Last Update: <strong>' +  displayDate + '</strong></p>');
+  });
+};
+
+function setautoupdate(cbox){
+  clearInterval(intervals);
+  $("#update_seconds").each(function(index, domele) {
+    update_seconds = domele.value;
+    update_seconds=update_seconds*1000;
+  });
+  if(cbox && update_seconds>0)
+    {intervals=setInterval(function(){process_value()},update_seconds);}      
+};
+
+</script>
+  <div  class="span10"><!-- USO SPAN 10 PARA DAR 10 ANCHURA LO QUE HAY A LA DERECHA DE LA TABLA LATERAL -->
+    {% if variable_list %}
+          <div class="row-fluid">  <!-- row fluid 3-->
+                <div class="span12" ><!-- span 12 3-->
+                          <div class="row-fluid">  <!-- row fluid 4-->
+                          <div id="date" class="span12"><p>Last Update: <strong>None </strong></p></div>
+                          </div>  <!-- row fluid 4-->
+                          <div class="input-append">
+                                    <input class="span2" id="update_seconds" type="text" placeholder="Seconds...">               
+                                    <div class="btn-group">
+                                      <button class="btn btn-primary" onclick="process_value()"><i class="icon-repeat icon-white"></i> Update</button>
+                                      <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                                      <ul class="dropdown-menu">
+                                        <li><a onclick="process_value()" onmouseover="" style="cursor: pointer;"><i class="icon-repeat"></i> Update</a></li>     
+                                        <li><a onclick="setautoupdate(true)"  onmouseover="" style="cursor: pointer;"><i class="icon-refresh"></i> Auto-Update</a></li>
+                                        <li class="divider"></li>                                       
+                                        <li><a onclick="setautoupdate(false)" onmouseover="" style="cursor: pointer;"><i class="icon-stop"></i> Stop</a></li>
+                                      </ul>
+                                    </div><!-- /btn-group -->>                                  
+                                    <div class="btn-group">
+                                      <a href="/display_editor" role="button" class="btn btn-primary" >Launch display editor</a>
+                                    </div><!-- /btn-group -->
+                          </div><!-- input append-->
+                </div><!-- span 12 3-->
+          </div>  <!-- row fluid 3-->
+          <div class="row-fluid">  <!-- row fluid 2-->
+            <div class="span12"><!-- span 12 2-->
+            <!-- div class="span12" id="tabla"-->
+            <table id="tabla" class="table table-striped table-bordered table-condensed">
+              <thead>
+                <tr>
+                  <th style="width: 30%">Server</th>
+                  <th style="width: 30%">Name</th>
+                  <th style="width: 40%">Value</th>
+                </tr>
+              </thead>
+              <tbody >
+                  {% for variable in variable_list %}
+                      {% if variable.display  %}
+                          {% if variable.value = None %}
+                            <tr class="error" id = "variable{{forloop.counter0}}">
+                          {% else %}
+                            <tr id = "variable{{forloop.counter0}}">
+                          {% endif %}
+                              <td id='server'>{{ variable.server }}</td>
+                              <td id='name'  >{{ variable.name }}</td>
+                              <td id='value'>
+                                  <label for="value{{forloop.counter0}}">
+                                    <input id="value{{forloop.counter0}}" class="value_class" type="text" name="value" placeholder="New Value…">
+                                  </label>      
+                              </td>                
+                            </tr>
+                      {% endif %}
+                  {% endfor %}
+              </tbody>
+            </table><!-- class table striped -->
+            </div><!-- div id tabla -->
+            </div>  <!-- row fluid 2-->
+        <!-- FIN LECTURA DE VARIABLES -->
+    {% else %}
+        <p>No variables are available.</p>
+        <p><a href="/admin/variables/">Add one.</p>
+    {% endif %}
+  </div><!--/.span 10-->

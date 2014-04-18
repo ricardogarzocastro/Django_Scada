@@ -1,0 +1,167 @@
+<script type="text/javascript">
+  var intervals={};
+  var update_seconds={};
+  plots={};
+  var graph_array = [[]];  
+  var previous_variable = "None";
+  var previous_server= "None";
+  var new_variable;
+  var line1=[];
+  var new_data = true;
+
+  $.ajaxSetup({ 
+     beforeSend: function(xhr, settings) {
+         function getCookie(name) {
+             var cookieValue = null;
+             if (document.cookie && document.cookie != '') {
+                 var cookies = document.cookie.split(';');
+                 for (var i = 0; i < cookies.length; i++) {
+                     var cookie = jQuery.trim(cookies[i]);
+                     // Does this cookie string begin with the name we want?
+                 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                     break;
+                 }
+             }
+         }
+         return cookieValue;
+         }
+         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+             // Only send the token to relative URLs i.e. locally.
+             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+         }
+     } 
+});
+
+//para hacer un listado de las variables a mostrar
+      $(document).ready(function() {
+      plots={};
+      optionsObj = {
+                      title:'',
+                      gridPadding:{right:35},
+                      axes:{
+                        xaxis:{
+                          renderer:$.jqplot.DateAxisRenderer,
+                          tickOptions:{formatString:'%H:%M:%S'}
+                          //tickInterval:'1 month'
+                        }
+                      },
+                      series:[{lineWidth:4, markerOptions:{style:'square'}}]
+                  };
+      });//closing }; for document.ready.function
+
+function graph_plot(){
+  $('#date').empty();
+  $('#date').append(spinner.el);
+  //Aquí irá el codigo para coger la variable seleccionada por el usuario
+  var obj={};
+  response = {"data" : []}
+  obj['server'] = $('#selector').find('option:selected').attr('id');
+  obj['name'] = $('#selector').find('option:selected').attr('class');
+  response.data.push(obj);
+  json_response = JSON.stringify(response);
+//Checking if the variable is a new one.
+  if (previous_server != "None"){
+    if (!(previous_server == obj['server'] && previous_variable == obj['name'])){
+      //line1=[[]];
+      new_data=true;
+    }
+  }
+  previous_variable = obj['name'];
+  previous_server = obj['server'];
+  $.post("/json/graph_live/", json_response).success(function(dta) {
+      //Codigo para añadir el nuevo data al graph_array y dibujar plot
+      var value = parseInt(dta.value,10);
+      if (new_data){
+        line1=[[dta.time,value]];
+        new_data=false;
+      }
+      else{line1.push([dta.time,value]);
+      }
+      optionsObj = {
+                      title:obj['server'] + ' ' + obj['name'],
+                      gridPadding:{right:35},
+                      axes:{
+                        xaxis:{
+                          renderer:$.jqplot.DateAxisRenderer,
+                          tickOptions:{formatString:'%H:%M:%S'}
+                          //tickInterval:'1 month'
+                        }
+                      },
+                      series:[{lineWidth:4, markerOptions:{style:'square'}}]
+                  };
+      plots["chart1"]=$.jqplot("chart1",[line1],optionsObj);
+      plots['chart1'].replot();
+      //Pongo fecha de la ultima actualización
+      var myDate = new Date();
+      var seconds=myDate.getSeconds();
+      var minutes=myDate.getMinutes();
+      var hours=myDate.getHours();
+      if (seconds<10) {seconds=('0'+seconds);}
+      if (minutes<10) {minutes=('0'+minutes);}
+      if (hours<10) {hours=('0'+hours);}
+      var displayDate =  hours + ':' + minutes +  ':' + seconds + ' ' + (myDate.getDate()) + '/' +  ( '0' + (myDate.getMonth()+1) ).slice( -2 ) + '/' + myDate.getFullYear();
+      $('#date').empty();
+      $('#date').append('<p>Last Update: <strong>' +  displayDate + '</strong></p>');
+  });
+};
+
+function clear_graph(){
+ line1 = [line1[line1.length - 1]];
+ plots["chart1"]=$.jqplot("chart1",[line1],optionsObj);
+ plots['chart1'].replot();
+};
+
+function setautoupdate(cbox){
+  clearInterval(intervals);
+  $("#update_seconds").each(function(index, domele) {
+    update_seconds = domele.value;
+    update_seconds=update_seconds*1000;
+  });
+  if(cbox && update_seconds>0)
+    {intervals=setInterval(function(){graph_plot()},update_seconds);}      
+};
+
+</script>
+<div class="span10" ><!-- span 10-->                 
+  <div class="row-fluid"><!--Row fluid para los botones y selectores-->
+      <div class="btn-toolbar-vertical" style="margin: 0;">    
+          <div id="date" class="span12"><p>Last Update: <strong>None </strong></p></div>
+          <div id="variable_selector_container">
+            <div id="last_variable_selector" class="row-fluid"><!--Row fluid para la variable e intervalo-->
+                  <div class="span1"><strong>Variable: </strong></div>           
+                  <div class="span7">
+                    <select class="span12" id="selector">
+                      {% for variable in variable_list %}
+                        <option  class="{{ variable.name }}"  id = "{{ variable.server }}">{{ variable.server }} - {{ variable.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+            </div><!--Row fluid para la variable-->
+          </div><!--variable selector container-->
+          <div class="input-append">
+                <input class="span2 offset1" id="update_seconds" type="text" placeholder="Seconds..."></input>    
+                <div class="btn-group">
+                  <button class="btn btn-primary" onclick="graph_plot()"><i class="icon-repeat icon-white"></i> Update</button>
+                  <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                      <ul class="dropdown-menu">
+                          <li><a onclick="graph_plot()" onmouseover="" style="cursor: pointer;"><i class="icon-repeat"></i> Update</a></li>
+                          <li><a onclick="setautoupdate(true)"  onmouseover="" style="cursor: pointer;"><i class="icon-refresh"></i> Auto-Update</a></li>
+                          <li class="divider"></li>
+                          <li><a onclick="setautoupdate(false)" onmouseover="" style="cursor: pointer;"><i class="icon-stop"></i> Stop</a></li>
+                          <li><a onclick="clear_graph()" onmouseover="" style="cursor: pointer;"><i class="icon-trash"></i> Clear</a></li>
+                      </ul>
+                </div><!-- /btn-group -->   
+                <div class="btn-group">
+                <a href="/display_editor" role="button" class="btn btn-primary" >Launch display editor</a>
+                </div><!-- /btn-group -->
+        </div><!-- input-append-->
+      </div><!--btn-toolbar-vertical-->                       
+<div id="chart1" style="height:400px;width:900px;"></div>
+</div><!--Row fluid para los botones y selectores--> 
+</div><!-- /span10 -->
+
+
+                                    
+
+

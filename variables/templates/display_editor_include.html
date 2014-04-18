@@ -1,0 +1,151 @@
+<script type="text/javascript">
+
+function process_display(){
+   
+//$('#save_changes').empty();
+//$('#save_changes').append(spinner.el);
+
+
+/*
+var n = $("tr").length;
+  response = {"data" : []}
+
+  for (var i=1; i<n; i++){
+    var obj={};
+    
+      obj['variable_id'] = i;
+
+      $("#variable"+ i + " input:checkbox").each(function(index, domele) {
+        obj['display'] = domele.checked;
+      });
+    
+     response.data.push(obj);
+
+  }
+
+  json_response = JSON.stringify(response);
+*/
+
+
+
+
+var n = $("tr").length;
+
+
+//MIRAR COMO SE PUEDE MEJORAR ESTE TROZO DE CODIGO!!! Buscar en page.html response.data[0][domele.name] = domele.value;
+
+  response = {"data" : []}
+
+  for (var i=0; i<n-1; i++){
+    var obj={};
+
+      $("#variable"+ i + " td#server").each(function(index, domele) {
+         obj['server'] = $(this).text();
+      });
+      $("#variable"+ i + " td#name").each(function(index, domele) {
+        obj['name'] = $(this).text();
+      });      
+      $("#variable"+ i + " input:checkbox").each(function(index, domele) {
+        obj['display'] = domele.checked;
+      });
+    
+     response.data.push(obj);
+
+  }
+
+  json_response = JSON.stringify(response);
+
+
+  $.post("/json/display_editor_response/", json_response).success(function(dta) {
+      //dta retorna success o error, para cada operación. Informamos al usuario con un cambio en el color de la tabla
+      $("#success-message").removeClass();
+      $("#success-message").toggleClass("alert alert-success");
+      $("#success-message").empty();
+      $("#success-message").append('<a class="close" data-dismiss="alert">x</a><strong>Success!</strong>');
+
+  });
+
+};
+
+</script>
+  <div  class="span10"><!-- USO SPAN 10 PARA DAR 10 ANCHURA LO QUE HAY A LA DERECHA DE LA TABLA LATERAL -->
+    {% if variable_list %}
+
+
+          <div class="row-fluid">  <!-- row fluid 3-->
+            <div class="span12" ><!-- span 12 3-->
+
+              <div id="save_changes" class="input-append">                                    
+                  <div class="btn-group">
+                    <button class="btn btn-primary" onclick="process_display()"> Save changes</button>
+                  </div><!-- /btn-group -->                   
+
+
+
+              </div><!-- input append-->
+            
+             
+
+                  <div id="success-message" >
+                  </div>           
+
+               </div><!-- span 12 3-->
+          </div>  <!-- row fluid 3-->
+
+
+          <div class="row-fluid">  <!-- row fluid 2-->
+            <div class="span12"><!-- span 12 2-->
+              <!-- div class="span12" id="tabla"-->
+              <table  id="tabla" class="span12"><!-- USO SPAN12 PARA DAR 12 ANCHURA A LA -->
+              <table  class="table table-striped table-bordered table-condensed">
+                <thead>
+                  <tr>
+                    <th style="width: 25%">Server</th>
+                    <th style="width: 30%">Name</th>
+                    <th style="width: 45%">Display</th>
+                  </tr>
+                </thead>
+                <tbody >
+                    {% for variable in variable_list %}
+
+                        <tr id = "variable{{forloop.counter0}}">
+
+                          <td id="server">{{ variable.server }}</td>
+                          <td id="name">{{ variable.name }}</td>
+                          <td id="value">     
+                            <label class="checkbox">
+                              
+                              {% if variable.display  %}
+                                <input type="checkbox" checked> 
+                              {% else %}
+                                <input type="checkbox" unchecked> 
+                              {% endif %}
+
+
+                            </label>   
+                          </td>
+
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+              </table><!-- class table striped -->
+            </table><!-- table SPAN12 -->
+          </div><!-- div id tabla -->
+
+        
+        </div>  <!-- row fluid 2-->
+
+        </div><!-- span 12 2-->
+
+      </div><!-- row fluid 1-->
+
+        <!-- FIN LECTURA DE VARIABLES -->
+
+
+                    {% else %}
+                    <p>No variables are available.</p>
+                    <p><a href="/admin/variables/">Add one.</p>
+                  {% endif %}
+  </div><!--/.span 10-->
+
