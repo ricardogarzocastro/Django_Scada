@@ -17,28 +17,28 @@ This my Bachelor Thesis project for the University of Zaragoza. The goal was to 
   1. Provide control operations over any brand of PLC
   2. Remote access to the control platform
 
-These requirements were met by developing a **Python web application**, with **Django** and **Bootstrap** as frameworks, that is allocated in a **Apache** server with **WSGI** technology and that is capable of meeting **SCADA** standards through **OPC** communicaiton.
+These requirements were met by developing a **Python web application**, with **Django** and **Bootstrap** as frameworks, that is allocated in an **Apache** server with **WSGI** technology and that is capable of meeting **SCADA** standards through **OPC** communicaiton.
 
 ###2. File directory description
 
 The file directory description is as follows: 
   1. **http.conf**: This is the Apache configuration file. Feel free to use it as reference.
   2. **django_scada**: This folder contains the Python files, static files and databases for the Django Scada application.
-    3. apache: Static files folder
-    4. celerybeat-schedule: config file for the Celerby Beat Cron Manager
+    3. apache: Static files folder.
+    4. celerybeat-schedule: config file for the Celerby Beat Cron Manager.
     5. django_admin_bootstrapped: Administration panel for this Django application comes with bootstrap theme.
-    6. django_scada: Folder with the necessary files for a Django project
-    7. variables: Django application folder for the SCADA
+    6. django_scada: Folder with the necessary files for a Django project.
+    7. variables: Django application folder for the SCADA.
 
 ###3. Installation and usage.
 
 Necessary programs for running all the features on this app are: 
 
 1. Python 2.7
-2. Pywin32: If you are using it under a Windows machine
+2. Pywin32: If you are using it under a Windows machine.
 3. OpenOPC: OPC client used by this app.
 4. Apache 2.2
-5. RabbitMQ: For the scheduled tasks
+5. RabbitMQ: For the scheduled tasks.
 
 Necessary Python packages:
   1. Django
