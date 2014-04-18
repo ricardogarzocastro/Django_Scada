@@ -39,13 +39,11 @@ Necessary programs for running all the features on this app are:
 3. OpenOPC: OPC client used by this app.
 4. Apache 2.2
 5. RabbitMQ: For the scheduled tasks
-6. 
 
 Necessary Python packages:
-1. Django
-2. django-celery
-3. pyro
-4. 
+  1. Django
+  2. django-celery
+  3. pyro
 
 Once all the programs are installed, for a development version or to give it a try just go the the terminal and type:
 
